@@ -21,8 +21,7 @@ SHADOW_PERSONALITY = (
     "Keep responses short (one or two sentences maximum)."
 )
 
-# We keep track of the conversation flow using a global string tracker variable
-# The Interactions API handles history natively on Google's servers via an Interaction ID!
+# We keep track of the conversation flow using a global tracker variable
 current_interaction_id = None
 
 @app.route('/')
@@ -41,7 +40,7 @@ def ask():
     start_time = time.time()
     
     try:
-        # Configuration setup using the standard dict parameter mappings for the Interactions API
+        # Configuration setup using parameter mappings for the Interactions API
         config_payload = {
             "system_instruction": SHADOW_PERSONALITY,
             "temperature": 0.7
@@ -51,10 +50,10 @@ def ask():
         if current_interaction_id:
             config_payload["previous_interaction_id"] = current_interaction_id
 
-        # Execute the new mandatory client interactions framework call loop
+        # Execute the correct client interactions framework call loop with 'input'
         interaction = client.interactions.create(
             model="gemini-2.5-flash-lite",
-            user_input=user_message,
+            input=user_message,
             config=config_payload
         )
         
@@ -65,7 +64,7 @@ def ask():
         reply_text = ""
         for step in interaction.steps:
             if step.type == "model_output":
-                reply_text = step.content[0].text
+                reply_text = step.content.text
                 break
                 
         if not reply_text:
