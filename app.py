@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from google import genai
+from google.genai import types  # <-- Mandatory for the new configuration style
 from dotenv import load_dotenv
 import time
 import os
@@ -43,12 +44,17 @@ def ask():
         # Check if there is an active session id to link previous history context
         prev_id = current_interaction_id if current_interaction_id else None
 
-        # Execute the correct client interactions call without nested configs
+        # Build the correct config structure using the library's official types module
+        config_payload = types.GenerateContentConfig(
+            system_instruction=SHADOW_PERSONALITY,
+            temperature=0.7
+        )
+
+        # Execute the client interactions call with correct configuration packaging
         interaction = client.interactions.create(
             model="gemini-2.5-flash-lite",
             input=user_message,
-            system_instruction=SHADOW_PERSONALITY,
-            temperature=0.7,
+            config=config_payload,
             previous_interaction_id=prev_id
         )
         
