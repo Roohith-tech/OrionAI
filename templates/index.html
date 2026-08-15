@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orion AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+</head>
+<body>
+    <!-- 10% Left Navigation Sidebar -->
+    <div class="sidebar">
+        <div class="brand-section">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo-circle">
+            <div class="brand-name">Orion</div>
+        </div>
+        <button class="new-chat-btn" onclick="clearChat()">+ New Chat</button>
+    </div>
+
+    <!-- Big Center Chat Area -->
+    <div class="chat-container">
+        <div class="messages-area" id="chatWindow">
+            <div class="message-group bot">
+                <div class="bot-bubble">
+                    Greetings. I am Orion. State your purpose.
+                </div>
+                <div class="response-time">0.0s response time</div>
+            </div>
+        </div>
+
+        <div class="input-wrapper">
+            <input type="text" class="chat-input" id="messageInput" placeholder="Ask anything..." onkeypress="checkEnter(event)">
+            <div class="input-controls">
+                <div class="mic-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>
+                </div>
+                <button class="send-btn" onclick="executeSend()">
+                    <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 15% Right Side History Panel -->
+    <div class="history-panel">
+        <div class="history-title">Chat History</div>
+        <div class="history-item">⚡ Project Shadow Core</div>
+        <div class="history-item">🌌 Orion System Diagnostics</div>
+        <div class="history-item">🧠 Chaos Control Logic</div>
+    </div>
+
+    <script>
+        const chatWindow = document.getElementById('chatWindow');
+        const messageInput = document.getElementById('messageInput');
+
+        function executeSend() {
+            const text = messageInput.value.trim();
+            if(!text) return;
+
+            // Display user message block
+            const userGroup = document.createElement('div');
+            userGroup.className = 'message-group user';
+            userGroup.innerHTML = `
+                <div class="user-bubble"></div>
+                <div class="response-time">Just now</div>
+            `;
+            userGroup.querySelector('.user-bubble').textContent = text;
+            chatWindow.appendChild(userGroup);
+            
+            messageInput.value = '';
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+
+            // Send to Backend Flask Route
+            fetch('/ask', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: text })
+            })
+            .then(res => res.json())
+            .then(data => {
+                const botGroup = document.createElement('div');
+                botGroup.className = 'message-group bot';
+                botGroup.innerHTML = `
+                    <div class="bot-bubble"></div>
+                    <div class="response-time"></div>
+                `;
+                botGroup.querySelector('.bot-bubble').textContent = data.reply;
+                botGroup.querySelector('.response-time').textContent = data.response_time;
+                
+                chatWindow.appendChild(botGroup);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            })
+            .catch(err => {
+                console.error("Communication broke:", err);
+            });
+        }
+
+        function checkEnter(e) {
+            if(e.key === 'Enter') executeSend();
+        }
+
+        function clearChat() {
+            chatWindow.innerHTML = `
+                <div class="message-group bot">
+                    <div class="bot-bubble">Greetings. I am Orion. State your purpose.</div>
+                    <div class="response-time">0.0s response time</div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
