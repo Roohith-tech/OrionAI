@@ -28,7 +28,7 @@ SHADOW_PERSONALITY = (
 
 # Start a universal chat history session using the classic library structure
 chat_session = genai.GenerativeModel(
-    model_name="gemini-2.5-flash",
+    model_name="gemini-2.5-flash-lite",
     system_instruction=SHADOW_PERSONALITY
 ).start_chat(history=[])
 
