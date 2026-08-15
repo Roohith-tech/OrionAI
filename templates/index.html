@@ -1,14 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="google-site-verification" content="doaY20S1WQjXTFQHv0yL5TbUIKpLi4LwicQXcru8U2Q" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Free SEO Meta Tags for Google Search Bots -->
     <title>Orion AI - Shadow the Hedgehog Fan Chatbot</title>
-    <meta name="description" content="Talk to Orion, a free AI chatbot built with the dark, serious personality of Shadow the Hedgehog.">
+    <meta name="description" content="Talk to Orion, a free AI chatbot built with the dark, serious personality of Shadow the Hedgehog. Experience the ultimate companion online now.">
+    <meta name="keywords" content="Orion AI, Shadow the Hedgehog AI, Shadow chatbot, Sonic AI companion, dark ai bot">
+    
     <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+    <style>
+        /* Extra styles for the interaction shortcut buttons */
+        .interaction-row {
+            display: flex;
+            gap: 10px;
+            margin: 0 auto 10px auto;
+            width: 100%;
+            max-width: 90%;
+            flex-wrap: wrap;
+        }
+        .interaction-btn {
+            background-color: #18191e;
+            color: #e3e3e3;
+            border: 1px solid #ba0000;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .interaction-btn:hover {
+            background-color: #ba0000;
+            color: #ffffff;
+            box-shadow: 0 0 8px rgba(186, 0, 0, 0.6);
+        }
+    </style>
 </head>
 <body>
+    <!-- 10% Left Navigation Sidebar -->
     <div class="sidebar">
         <div class="brand-section">
             <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo-circle">
@@ -17,6 +47,7 @@
         <button class="new-chat-btn" onclick="clearChat()">+ New Chat</button>
     </div>
 
+    <!-- Big Center Chat Area -->
     <div class="chat-container">
         <div class="messages-area" id="chatWindow">
             <div class="message-group bot">
@@ -27,32 +58,33 @@
             </div>
         </div>
 
-        <div class="input-wrapper">
-            <!-- New structural adjustments to allow file attachment strings -->
-            <input type="text" class="chat-input" id="messageInput" placeholder="Ask anything..." onkeypress="checkEnter(event)">
-            
-            <div class="input-controls">
-                <!-- Clickable Paperclip Upload Trigger Asset Icon -->
-                <div class="mic-icon" onclick="triggerFilePicker()" title="Upload file attachment">
-                    <svg width="20" height="20" viewBox="0 0 24 24"><path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-3.31 2.69-6 6-6s6 2.69 6 6v10c0 4.42-3.58 8-8 8s-8-3.58-8-8V4h2v11c0 3.31 2.69 6 6 6s6-2.69 6-6V5c0-2.21-1.79-4-4-4s-4 1.79-4 4v12.5c0 1.1.9 2 2 2s2-.9 2-2V6h2z"/></svg>
-                </div>
-                <!-- Hidden real browser type dynamic file link block input -->
-                <input type="file" id="fileAttachment" style="display: none;" onchange="updateFileIndicator()">
+        <!-- Clickable Interaction Buttons Panel -->
+        <div class="interaction-row">
+            <button class="interaction-btn" onclick="sendInteraction('Initiate Chaos Control Combat Simulation')">🔥 Combat Drill</button>
+            <button class="interaction-btn" onclick="sendInteraction('Run complete system diagnostics on the core engine')">🌌 System Diagnostics</button>
+            <button class="interaction-btn" onclick="sendInteraction('Give me a serious piece of motivation')">🧠 Motivation</button>
+        </div>
 
+        <div class="input-wrapper">
+            <input type="text" class="chat-input" id="messageInput" placeholder="Ask anything..." onkeypress="checkEnter(event)">
+            <div class="input-controls">
+                <div class="mic-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>
+                </div>
                 <button class="send-btn" onclick="executeSend()">
                     <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
                 </button>
             </div>
         </div>
-        <!-- Tiny subtle attachment label status readout text layout alignment container block element tag frame link structural tracker row layout container context wrapper frame panel border line setup logic check line text asset box label style placeholder array indicator script context indicator hook line marker section info element row node anchor placeholder status element banner display alignment row box layout indicator -->
-        <div id="fileStatus" style="font-size: 0.75rem; color: #ba0000; text-align: center; margin-top: 5px; height: 15px;"></div>
     </div>
 
+    <!-- 15% Right Side History Panel -->
     <div class="history-panel">
         <div class="history-title">About Orion AI</div>
         <p style="font-size: 0.8rem; color: #7e8194; line-height: 1.4; margin-bottom: 15px;">
-            Orion AI is an advanced interactable lifeform system simulation. Upload code datasets, system reports, or custom inputs for immediate evaluation.
+            Orion AI is a custom web chatbot built to replicate the ultimate lifeform. Talk to this advanced simulation to test his responses.
         </p>
+        
         <div class="history-title">Chat History</div>
         <div class="history-item">⚡ Project Shadow Core</div>
         <div class="history-item">🌌 Orion System Diagnostics</div>
@@ -62,56 +94,35 @@
     <script>
         const chatWindow = document.getElementById('chatWindow');
         const messageInput = document.getElementById('messageInput');
-        const fileAttachment = document.getElementById('fileAttachment');
-        const fileStatus = document.getElementById('fileStatus');
 
-        function triggerFilePicker() {
-            fileAttachment.click();
-        }
-
-        function updateFileIndicator() {
-            if(fileAttachment.files.length > 0) {
-                fileStatus.textContent = `📎 Attached: ${fileAttachment.files[0].name}`;
-            } else {
-                fileStatus.textContent = '';
-            }
+        // Shortcut button helper function
+        function sendInteraction(phrase) {
+            messageInput.value = phrase;
+            executeSend();
         }
 
         function executeSend() {
             const text = messageInput.value.trim();
-            const hasFile = fileAttachment.files.length > 0;
-            if(!text && !hasFile) return;
+            if(!text) return;
 
-            // Render message prompt block text update readouts to human display console view window layout instantly
+            // Display user message block
             const userGroup = document.createElement('div');
             userGroup.className = 'message-group user';
-            let messageDisplay = text || "[Attached Media Transmission Asset Document Data Packet Data Object Upload]";
-            if(hasFile && text) messageDisplay += ` (📎 ${fileAttachment.files[0].name})`;
-            
             userGroup.innerHTML = `
                 <div class="user-bubble"></div>
                 <div class="response-time">Just now</div>
             `;
-            userGroup.querySelector('.user-bubble').textContent = messageDisplay;
+            userGroup.querySelector('.user-bubble').textContent = text;
             chatWindow.appendChild(userGroup);
             
             messageInput.value = '';
             chatWindow.scrollTop = chatWindow.scrollHeight;
 
-            // Formulate data structure packets packaging via FormData wrappers to stream file streams
-            const packetForm = new FormData();
-            packetForm.append('message', text);
-            if(hasFile) {
-                packetForm.append('file', fileAttachment.files[0]);
-            }
-
-            // Wipe file cache attachment memory registers clean right after copying values into memory
-            fileAttachment.value = '';
-            fileStatus.textContent = '';
-
+            // Send to Backend Flask Route
             fetch('/ask', {
                 method: 'POST',
-                body: packetForm
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: text })
             })
             .then(res => res.json())
             .then(data => {
@@ -124,7 +135,7 @@
                 botGroup.querySelector('.bot-bubble').textContent = data.reply;
                 botGroup.querySelector('.response-time').textContent = data.response_time;
                 
-                chatWindow.appendChild(botGroup);
+                chatGroup = chatWindow.appendChild(botGroup);
                 chatWindow.scrollTop = chatWindow.scrollHeight;
             })
             .catch(err => {
@@ -136,13 +147,10 @@
             if(e.key === 'Enter') executeSend();
         }
 
+        // Updated for the modern Google Interactions API integration
         function clearChat() {
-            chatWindow.innerHTML = `
-                <div class="message-group bot">
-                    <div class="bot-bubble">Greetings. I am Orion. State your purpose.</div>
-                    <div class="response-time">0.0s response time</div>
-                </div>
-            `;
+            // Reloads the browser tab window to reset the server-side interaction token id history tracker instantly
+            window.location.reload();
         }
     </script>
 </body>
