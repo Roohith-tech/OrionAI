@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orion AI</title>
+    
+    <!-- 100% Free SEO Meta Tags for Google Bots -->
+    <title>Orion AI - Shadow the Hedgehog Fan Chatbot</title>
+    <meta name="description" content="Talk to Orion, a free AI chatbot built with the dark, serious personality of Shadow the Hedgehog. Experience the ultimate companion online now.">
+    <meta name="keywords" content="Orion AI, Shadow the Hedgehog AI, Shadow chatbot, Sonic AI companion, dark ai bot">
+    
     <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
 </head>
 <body>
@@ -40,8 +45,13 @@
         </div>
     </div>
 
-    <!-- 15% Right Side History Panel -->
+    <!-- 15% Right Side History Panel (With Keyword Text for Google to Scan) -->
     <div class="history-panel">
+        <div class="history-title">About Orion AI</div>
+        <p style="font-size: 0.8rem; color: #7e8194; line-height: 1.4; margin-bottom: 15px;">
+            Orion AI is a custom web chatbot built to replicate the ultimate lifeform. Talk to this advanced simulation to test his responses.
+        </p>
+        
         <div class="history-title">Chat History</div>
         <div class="history-item">⚡ Project Shadow Core</div>
         <div class="history-item">🌌 Orion System Diagnostics</div>
@@ -56,7 +66,6 @@
             const text = messageInput.value.trim();
             if(!text) return;
 
-            // Display user message block
             const userGroup = document.createElement('div');
             userGroup.className = 'message-group user';
             userGroup.innerHTML = `
@@ -69,7 +78,6 @@
             messageInput.value = '';
             chatWindow.scrollTop = chatWindow.scrollHeight;
 
-            // Send to Backend Flask Route
             fetch('/ask', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
