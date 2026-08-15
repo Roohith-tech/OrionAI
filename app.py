@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import time
 import os
 
-# Load secret key configuration values from the .env file
+# Load secret key configuration values from the local .env file
 load_dotenv()
 
 # Initialize the mandatory modern Google GenAI Client
@@ -40,27 +40,22 @@ def ask():
     start_time = time.time()
     
     try:
-        # Configuration setup using parameter mappings for the Interactions API
-        config_payload = {
-            "system_instruction": SHADOW_PERSONALITY,
-            "temperature": 0.7
-        }
-        
-        # Link past session history automatically by feeding the previous session ID block if active
-        if current_interaction_id:
-            config_payload["previous_interaction_id"] = current_interaction_id
+        # Check if there is an active session id to link previous history context
+        prev_id = current_interaction_id if current_interaction_id else None
 
-        # Execute the correct client interactions framework call loop with 'input'
+        # Execute the correct client interactions call without nested configs
         interaction = client.interactions.create(
             model="gemini-2.5-flash-lite",
             input=user_message,
-            config=config_payload
+            system_instruction=SHADOW_PERSONALITY,
+            temperature=0.7,
+            previous_interaction_id=prev_id
         )
         
-        # Store the conversation state context ID on Google's cloud server database structure
+        # Store the conversation state context ID on Google's cloud server
         current_interaction_id = interaction.id
         
-        # Read content outputs from the new steps array format sequence layout profile block
+        # Read content outputs from the step sequence sequence loop layout
         reply_text = ""
         for step in interaction.steps:
             if step.type == "model_output":
